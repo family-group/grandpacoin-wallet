@@ -6,17 +6,11 @@ import Button from './Button';
 import LogAreaOutput from './LogAreaOutput';
 
 const styles = {
-    input: {
-        width: '100%',
-        marginTop: '15px'
-    },
     logAreaOutput: {
         minHeight: '100px',
-        marginTop: '15px'
     },
     button: {
         width: '150px',
-        marginTop: '15px',
     }
 }
 
@@ -63,26 +57,27 @@ class SendTransaction extends React.Component {
                     <div className="send-transaction-inputs">
                         <TextInput
                             name="senderAddress"
+                            className="full-width  margin-top"
                             value={senderAddress}
                             onChange={this.onChange}
                             placeholder="Sender"
-                            style={styles.input}
                         />
                         <TextInput
                             name="recipientAddress"
+                            className="full-width  margin-top"
                             value={recipientAddress}
                             onChange={this.onChange}
                             placeholder="Recipient"
-                            style={styles.input}
                         />
                         <TextInput
                             name="value"
+                            className="full-width  margin-top"
                             value={value}
                             onChange={this.onChange}
                             placeholder="Value"
-                            style={styles.input}
                         />
                         <Button
+                            className="margin-top"
                             onClick={this.onSignTransaction}
                             style={styles.button}
                         >SIGN TRANSACTION</Button>
@@ -93,12 +88,13 @@ class SendTransaction extends React.Component {
                         />
                         <TextInput
                             name="urlNode"
+                            className="full-width  margin-top"
                             value={urlNode}
                             onChange={this.onChange}
                             placeholder="Blockchain Node"
-                            style={styles.input}
                         />
                         <Button
+                            className="margin-top"
                             onClick={this.onSendTransaction}
                             style={styles.button}
                         >SEND TRANSACTION</Button>

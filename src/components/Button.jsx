@@ -2,10 +2,10 @@ import React from 'react';
 import './css/Button.css';
 
 const Button = (props) => {
-    const { children, onClick, style = {} } = props;
+    const { children, onClick, style = {}, className = "" } = props;
     return (
         <button
-            className="button"
+            className={`button ${className}`}
             style={style}
             onClick={onClick}
         >{children}</button>
