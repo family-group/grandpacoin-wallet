@@ -1,0 +1,32 @@
+.grandpa-header {
+    display: flex;
+    padding: 40px 0px;
+    background-color: var(--color-grandpa-blue);
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.grandpa-header a {
+    color: white;
+    text-decoration: none;
+}
+
+.grandpa-logo-header {
+    font-family: 'Montserrat-SemiBold';
+    width: 40%;
+    min-width: 400px;
+    padding-bottom: 20px;
+}
+
+.header-menu {
+    display: flex;
+    width: 65%;
+    font-family: 'Montserrat-Regular';
+}
+
+.header-menu > div {
+    margin: auto;
+    min-width: 50px;
+}

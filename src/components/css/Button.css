@@ -1,0 +1,9 @@
+.button {
+  outline: none;
+  border: none;
+  border-color: var(--color-grandpa-blue);
+  border-radius: 4px;
+  background-color: var(--color-grandpa-blue);
+  color: white;
+  padding: 4px 4px;
+}

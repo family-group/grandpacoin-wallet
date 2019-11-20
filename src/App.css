@@ -1,22 +1,36 @@
-.App {
-  text-align: center;
+:root {
+  --color-grandpa-yellow: #FBD206;
+  --color-grandpa-blue: #224870;
+  --color-grandpa-gray: #b1b1b1;
 }
 
-.App-logo {
-  height: 40vmin;
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat-Regular';
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@font-face {
+  font-family: 'Montserrat-Bold';
+  src: url('./assets/fonts/Montserrat-Bold.ttf');
 }
 
-.App-link {
-  color: #09d3ac;
+@font-face {
+  font-family: 'Montserrat-SemiBold';
+  src: url('./assets/fonts/Montserrat-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Montserrat-Regular';
+  src: url('./assets/fonts/Montserrat-Regular.ttf')
+}
+
+.component-title {
+  color: var(--color-grandpa-blue);
+  font-size: 18px;
+}
+
+.component-description {
+  font-size: 14px;
+  padding: 5px 0;
 }
