@@ -2,10 +2,18 @@ import React from 'react';
 import './css/TextInput.css';
 
 const TextInput = (props) => {
-    const { value, onChange, placeholder = '' } = props;
+    const { name, value, onChange, placeholder = '', style = {} } = props;
 
     return (
-        <input className="text-input" type="text" value={value} placeholder={placeholder} onChange={onChange} />
+        <input
+            className="text-input"
+            style={style}
+            type="text"
+            name={name}
+            value={value}
+            placeholder={placeholder}
+            onChange={onChange}
+        />
     )
 }
 

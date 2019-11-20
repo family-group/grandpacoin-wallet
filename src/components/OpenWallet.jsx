@@ -5,6 +5,16 @@ import TextInput from './TextInput';
 import LogAreaOutput from './LogAreaOutput';
 import './css/OpenWallet.css'
 
+const styles = {
+    input: {
+        marginRight: '10px'
+    },
+    logAreaOutput: {
+        minHeight: '50px',
+        right: '0px'
+    }
+}
+
 class OpenWallet extends React.Component {
     constructor(props) {
         super(props);
@@ -33,9 +43,14 @@ class OpenWallet extends React.Component {
                     <h3 className="component-title">Open an Existing Wallet</h3>
                     <p className="component-description">Enter your wallet private key (compressed ECDSA key, 65 hex digits)</p>
                     <div className="open-wallet-input-section">
-                        <TextInput onChange={this.onChange} value={this.state.walletPrivateKey} />
+                        <TextInput
+                            name="walletPrivateKey"
+                            style={styles.input}
+                            value={this.state.walletPrivateKey}
+                            onChange={this.onChange}
+                        />
                         <Button onClick={this.openWallet}>OPEN WALLET</Button>
-                        <LogAreaOutput value={''} style={{ minHeight: '50px' }} />
+                        <LogAreaOutput value={''} style={styles.logAreaOutput} />
                     </div>
                 </div>
             </Layout>

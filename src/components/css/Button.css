@@ -6,4 +6,5 @@
   background-color: var(--color-grandpa-blue);
   color: white;
   padding: 4px 4px;
+  cursor: pointer;
 }

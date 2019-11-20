@@ -1,0 +1,9 @@
+.account-balance-container {
+    width: 65%;
+}
+
+.account-balance-inputs {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}

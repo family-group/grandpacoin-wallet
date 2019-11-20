@@ -1,25 +1,54 @@
 import React from 'react';
 import GrandpaLogo from '../assets/logos/GRANDPACOIN_WALLET.svg';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './css/Header.css';
 
+const style = {
+    link: {
+        borderBottom: '2px solid #FBD206'
+    }
+}
+
 class Header extends React.Component {
+    constructor(props) {
+        super(props);
+        this.menuUnderline = this.menuUnderline.bind(this);
+    }
+
+    menuUnderline(route) {
+        const { location: { pathname } } = this.props;
+        if (route === pathname) {
+            return style.link;
+        }
+        return {};
+    }
+
     render() {
         return (
             <header className="grandpa-header">
                 <img src={GrandpaLogo} className="grandpa-logo-header" alt="grandpa-logo" />
                 <nav className="header-menu">
-                    <div><Link to="/">Home</Link></div>
-                    <div>
+                    <div
+                        style={this.menuUnderline('/')}
+                    >
+                        <Link to="/">Home</Link></div>
+                    <div
+                        style={this.menuUnderline('/open-wallet')}
+                    >
                         <Link to="/open-wallet">Open Wallet</Link>
                     </div>
-                    <div>
+                    <div
+                        style={this.menuUnderline('/create-wallet')}>
                         <Link to="/create-wallet">Create Wallet</Link>
                     </div>
-                    <div>
+                    <div
+                        style={this.menuUnderline('/account-balance')}
+                    >
                         <Link to="/account-balance">Account Balance</Link>
                     </div>
-                    <div>
+                    <div
+                        style={this.menuUnderline('/send-transaction')}
+                    >
                         <Link to="/send-transaction">Send Transaction</Link>
                     </div>
                     <div >Log Out</div>
@@ -29,4 +58,4 @@ class Header extends React.Component {
     }
 }
 
-export default Header;
+export default withRouter(props => (<Header {...props} />));
