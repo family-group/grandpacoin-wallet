@@ -34,7 +34,7 @@ function CreateAccount(rootKey, index) {
             return _address;
         }
         get path() {
-            return _address;
+            return _path;
         }
         getData() {
             return {
