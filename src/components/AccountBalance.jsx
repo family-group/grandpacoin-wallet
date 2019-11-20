@@ -6,19 +6,11 @@ import TextInput from './TextInput';
 import './css/AccountBalance.css';
 
 const styles = {
-    addressInput: {
-        width: '100%',
-    },
-    nodeInput: {
-        marginTop: '15px',
-        width: '100%'
-    },
     button: {
         width: '150px',
         marginTop: '15px'
     },
     logAreaOutput: {
-        width: '100%',
         minHeight: '100px'
     }
 }
@@ -49,16 +41,24 @@ class AccountBalance extends React.Component {
                     <h3 className="component-title">View Account Balance</h3>
                     <div className="account-balance-inputs">
                         <TextInput
-                            style={styles.addressInput} placeholder='Address' name={"address"} value={this.state.address} onChange={this.onChange}
+                            className="full-width"
+                            placeholder='Address'
+                            name="address"
+                            value={this.state.address}
+                            onChange={this.onChange}
                         />
                         <TextInput
-                            style={styles.nodeInput} placeholder='Blockchain Node' name="nodeUrl" value={this.state.nodeUrl} onChange={this.onChange}
+                            className="full-width margin-top"
+                            placeholder='Blockchain Node' name="nodeUrl" value={this.state.nodeUrl} onChange={this.onChange}
                         />
                         <Button
-                            style={styles.button} onClick={this.onClick}
+                            style={styles.button}
+                            onClick={this.onClick}
                         >DISPLAY BALANCE</Button>
                         <LogAreaOutput
-                            value={''} style={styles.logAreaOutput}
+                            value={''}
+                            style={styles.logAreaOutput}
+                            className="margin-top"
                         />
                     </div>
                 </div>
