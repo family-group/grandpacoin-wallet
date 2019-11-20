@@ -1,0 +1,8 @@
+.send-transaction-container {
+    width: 65%;
+}
+
+.send-transaction-inputs {
+    display: flex;
+    flex-direction: column;
+}
