@@ -3,7 +3,7 @@ class Xhr {
     constructor(endpoint, options = {}) {
         this.body = options.body ? JSON.stringify(options.body) : null;
         this.xhr = new XMLHttpRequest();
-        this.xhr.open(options.method ? options.method.toUpperCase() : 'GET', Xhr.baseUrl + endpoint);
+        this.xhr.open(options.method ? options.method.toUpperCase() : 'GET', options.useBaseUrl ? options.useBaseUrl + endpoint : Xhr.baseUrl + endpoint);
         this.xhr.send(this.body)
         this.result = this.result.bind(this);
         this.abort = this.abort.bind(this);

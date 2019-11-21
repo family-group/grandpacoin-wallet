@@ -1,9 +1,25 @@
 .account-balance-container {
-    width: 65%;
+    width: 65%
 }
-
 .account-balance-inputs {
     padding-top: 20px;
     display: flex;
     flex-direction: column;
+}
+.balance-input {
+    width: 97%;
+    border-radius: 3px;
+    padding: 7px;
+    border: 1px solid var(--color-grandpa-gray);
+}
+
+@media (max-width: 600px) {
+    .account-balance-container {
+        width: 100%
+    }
+}
+@media (max-width: 460px) {
+    .balance-input {
+        width: 90%
+    }
 }
