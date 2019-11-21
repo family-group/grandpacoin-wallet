@@ -26,7 +26,9 @@ class Header extends React.Component {
     render() {
         return (
             <header className="grandpa-header">
-                <img src={GrandpaLogo} className="grandpa-logo-header" alt="grandpa-logo" />
+                <div className="header-logo">
+                    <img src={GrandpaLogo} className="grandpa-logo-header" alt="grandpa-logo" />
+                </div>
                 <nav className="header-menu">
                     <div
                         style={this.menuUnderline('/')}
@@ -51,7 +53,7 @@ class Header extends React.Component {
                     >
                         <Link to="/send-transaction">Send Transaction</Link>
                     </div>
-                    <div >Log Out</div>
+                    <div style={{ cursor: 'pointer' }}>Log Out</div>
                 </nav>
             </header>
         );
