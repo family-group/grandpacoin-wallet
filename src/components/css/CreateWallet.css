@@ -1,3 +1,8 @@
 .create-wallet-container {
     width: 65%;
+    font-size: 14px;
+}
+
+.create-wallet-input {
+    width: 100%;
 }

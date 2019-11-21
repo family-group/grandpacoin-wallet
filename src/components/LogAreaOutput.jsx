@@ -2,12 +2,8 @@ import React from 'react';
 import './css/LogAreaOutput.css';
 
 export default class LogAreaOutput extends React.Component {
-    constructor() {
-        super();
-    }
-
     render() {
-        const { value, className, style } = this.props;
+        const { value, className = '', style = {} } = this.props;
         return (
             <div className={`log-area-output ${className}`} style={style}>
                 {
@@ -34,11 +30,4 @@ export default class LogAreaOutput extends React.Component {
             </div>
         )
     }
-    /* const { value = '', style = {}, className = "" } = props;
-
-    return (
-        <div className={`log-area-output ${className}`} style={style}>
-            {value}
-        </div>
-    ) */
-};
+}

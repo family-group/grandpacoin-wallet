@@ -6,5 +6,6 @@
 }
 
 .label-text {
-    padding-bottom: 3px;
+    margin-bottom: 6px;
+    overflow-wrap: break-word;
 }

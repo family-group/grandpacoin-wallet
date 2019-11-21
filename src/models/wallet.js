@@ -1,9 +1,8 @@
 import { validateMnemonic } from 'bip39';
 import {
     loadAccounts, generateMnemonic,
-    decryptMnemonic, encryptMnemonic
+    decryptMnemonic, encryptMnemonic, loadAccount
 } from '../utils/functions';
-import { ethers } from 'ethers';
 
 
 
@@ -26,9 +25,8 @@ function Wallet(mnemonic) {
 
     class SingleWallet {
         constructor() {
-            this.accounts = loadAccounts(_mnemonic, 5);
-            console.log(new ethers.Wallet.fromMnemonic(_mnemonic, "m/44'/1313'/0'/0/0"));
-            console.log(this.accounts[0].getData());
+            this.accounts = loadAccounts(_mnemonic, 1);
+            this.account = loadAccount(mnemonic);
         }
 
         get mnemonic() {

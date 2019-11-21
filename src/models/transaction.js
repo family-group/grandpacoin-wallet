@@ -1,5 +1,5 @@
 import utils from '../utils/functions';
-import Ajax from '../utils/ajax';
+import Ajax from '../utils/xhr';
 
 class Transaction {
     constructor(sender, to, value, fee, data, senderPubKey) {

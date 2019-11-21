@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import { fromSeed } from 'bip32';
 import { mnemonicToSeedSync } from 'bip39';
 import Account from '../models/account';
+import grandpa44 from '../utils/bip44-params';
 const secp256k1 = new elliptic.ec('secp256k1');
 
 export function toHexString(value) {
@@ -51,7 +52,7 @@ export function generateEntropy(length = 16) {
 }
 
 export function encryptMnemonic(mnemonic, password = '') {
-    return ethers.Wallet.fromMnemonic(mnemonic).encrypt(password);
+    return ethers.Wallet.fromMnemonic(mnemonic, grandpa44.mainPath + '/0').encrypt(password);
 }
 
 export function decryptMnemonic(encryptJSON, password = '') {
@@ -67,12 +68,25 @@ export function loadAccounts(mnemonic, count = 1) {
     }
     return accounts;
 }
+
+export function loadAccount(mnemonic) {
+    const seed = mnemonicToSeedSync(mnemonic);
+    let account = {};
+    const rootKey = fromSeed(seed);
+    account = Account(rootKey, 0);
+    return account.getData();
+}
+
 export function encryptAndSaveJSON(wallet, password) {
     return wallet.encrypt(password)
         .then(json => {
-            localStorage['JSON'] = json;
+            localStorage.setItem('json', json);
         })
         .catch(err => console.log('err', err))
+}
+
+export function decryptAndSaveJSONWallet() {
+    return;
 }
 
 export default {
