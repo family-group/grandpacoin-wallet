@@ -85,8 +85,23 @@ export function encryptAndSaveJSON(wallet, password) {
         .catch(err => console.log('err', err))
 }
 
-export function decryptAndSaveJSONWallet() {
-    return;
+export function checkLocalStorageForWallet() {
+    const encryptedWallet = localStorage.getItem('json');
+
+    if (encryptedWallet) {
+        return true;
+    }
+    return false;
+}
+
+export function dinamicTitle(title) {
+    document.title = `Grandpacoin Wallet | ${title}`;
+}
+
+export function getWalletJSON() {
+    const encryptedWallet = localStorage.getItem('json');
+    if (encryptedWallet) return { encryptedWallet };
+    return encryptedWallet;
 }
 
 export default {
@@ -100,5 +115,8 @@ export default {
     decryptMnemonic,
     loadAccounts,
     hexStringToUint8Array,
-    encryptAndSaveJSON
+    encryptAndSaveJSON,
+    checkLocalStorageForWallet,
+    dinamicTitle,
+    getWalletJSON
 }

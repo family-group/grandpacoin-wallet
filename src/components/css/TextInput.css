@@ -6,8 +6,9 @@
     box-shadow: none;
     width: 55%;
     border-radius: 3px;
-    padding: 3px 0px;
+    padding: 10px 0px 10px 3px;
     border: 1px solid var(--color-grandpa-gray);
+    font-size: 14px;
 }
 
 .text-input:focus {

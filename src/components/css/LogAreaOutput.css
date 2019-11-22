@@ -9,3 +9,7 @@
     margin-bottom: 6px;
     overflow-wrap: break-word;
 }
+
+.log-area-output-error {
+    border: 1px solid red;
+}

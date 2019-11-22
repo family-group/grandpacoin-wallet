@@ -5,14 +5,14 @@ export default class LogAreaOutput extends React.Component {
     render() {
         const { value, className = '', style = {} } = this.props;
         return (
-            <div className={`log-area-output ${className}`} style={style}>
+            <div className={``} style={style}>
                 {
                     typeof value === 'string' ? <p>{value}</p> :
                         Array.isArray(value) ? (
                             <React.Fragment>
                                 {
                                     value.map((element, index) => {
-                                        return <p className="label-text" key={`label-${index}`}>{element}</p>
+                                        return <p className={`label-text log-area-output ${className}`} key={`label-${index}`}>{element}</p>
                                     })
                                 }
                             </React.Fragment>
@@ -20,7 +20,7 @@ export default class LogAreaOutput extends React.Component {
                                 <React.Fragment>
                                     {
                                         Object.keys(value).map((valueLabel, index) => {
-                                            return <p className="label-text" key={`label-${index}`}>{`${valueLabel}: ${value[valueLabel]}`}</p>
+                                            return <p className={`label-text log-area-output ${className}`} key={`label-${index}`}>{`${valueLabel}: ${value[valueLabel]}`}</p>
                                         })
 
                                     }

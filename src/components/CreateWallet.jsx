@@ -5,7 +5,9 @@ import TextInput from './TextInput';
 import LogAreaOutput from './LogAreaOutput';
 import utils from './../utils/functions';
 import Wallet from './../models/wallet';
+import { LoggedContext } from './../LoggedContext';
 import './css/CreateWallet.css';
+import Loader from './Loader';
 
 class CreateWallet extends React.Component {
     constructor(props) {
@@ -16,22 +18,31 @@ class CreateWallet extends React.Component {
             privateKey: '',
             publicKey: '',
             password: '',
-            activeButton: '',
+            disabled: false,
+            error: '',
+            loading: false
         }
-        this.onClick = this.onClick.bind(this);
+        this.createWallet = this.createWallet.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
-    onClick() {
+    componentDidMount() {
+        const { toggleLogged } = this.context;
+        toggleLogged();
+    }
+
+    createWallet() {
         const { password } = this.state;
+        const { toggleLogged } = this.context;
         const mnemonic = utils.generateMnemonic();
         const wallet = new Wallet(mnemonic);
 
         const { address, privateKey, publicKey } = wallet.account;
 
         this.setState({
-            activeButton: false,
-        })
+            disabled: true,
+            loading: true,
+        });
         wallet.encrypt(password)
             .then(encryptWallet => {
                 localStorage.setItem('json', encryptWallet);
@@ -42,14 +53,18 @@ class CreateWallet extends React.Component {
                     privateKey,
                     publicKey,
                     password: '',
-                    activeButton: true,
-                })
+                    disabled: false,
+                    loading: false,
+                });
+                toggleLogged();
             })
             .catch(error => {
                 console.log(error)
                 this.setState({
                     password: '',
-                    activeButton: true
+                    loading: false,
+                    disabled: false,
+                    error
                 })
             });
     }
@@ -68,7 +83,9 @@ class CreateWallet extends React.Component {
             privateKey,
             publicKey,
             password,
-            activeButton
+            disabled,
+            error,
+            loading
         } = this.state;
         return (
             <Layout>
@@ -84,23 +101,29 @@ class CreateWallet extends React.Component {
                             placeholder="Password"
                         />
                         <Button
-                            onClick={this.onClick}
-                            active={activeButton}
+                            onClick={this.createWallet}
+                            disabled={disabled}
                         >GENERATE NOW</Button>
-                        <LogAreaOutput
-                            value={{
-                                mnemonic,
-                                address,
-                                privateKey,
-                                publicKey
-                            }}
-                            style={{ minHeight: '100px' }}
-                        />
+                        {
+                            loading ?
+                                <Loader />
+                                : <LogAreaOutput
+                                    value={!error ? {
+                                        'Mnemonic': mnemonic,
+                                        'Address': address,
+                                        'Public Key': publicKey,
+                                        'Private Key': privateKey
+                                    } : { 'Error': error }}
+                                    className={error ? 'log-area-output-error' : ''}
+                                />
+                        }
                     </div>
                 </div>
             </Layout>
         )
     }
 }
+
+CreateWallet.contextType = LoggedContext;
 
 export default CreateWallet;

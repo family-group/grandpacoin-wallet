@@ -1,6 +1,8 @@
 import React from 'react';
 import GrandpaLogo from '../assets/logos/GRANDPACOIN_WALLET.svg';
 import { Link, withRouter } from 'react-router-dom';
+import { dinamicTitle } from './../utils/functions';
+import { LoggedContext } from './../LoggedContext';
 import './css/Header.css';
 
 const style = {
@@ -12,7 +14,14 @@ const style = {
 class Header extends React.Component {
     constructor(props) {
         super(props);
+
         this.menuUnderline = this.menuUnderline.bind(this);
+        this.logoutAndClearLocaStorage = this.logoutAndClearLocaStorage.bind(this);
+    }
+
+    componentDidMount() {
+        const { toggleLogged } = this.context;
+        toggleLogged();
     }
 
     menuUnderline(route) {
@@ -23,7 +32,18 @@ class Header extends React.Component {
         return {};
     }
 
+    logoutAndClearLocaStorage() {
+        const { history } = this.props;
+        const { toggleLogged } = this.context;
+        localStorage.clear();
+        history.push('/');
+        dinamicTitle('Home');
+        toggleLogged();
+    }
+
     render() {
+        let { logged } = this.context;
+        console.log(logged)
         return (
             <header className="grandpa-header">
                 <div className="header-logo">
@@ -31,33 +51,50 @@ class Header extends React.Component {
                 </div>
                 <nav className="header-menu">
                     <div
+                        onClick={() => dinamicTitle('Home')}
                         style={this.menuUnderline('/')}
                     >
                         <Link to="/">Home</Link></div>
                     <div
+                        onClick={() => dinamicTitle('Open Wallet')}
                         style={this.menuUnderline('/open-wallet')}
                     >
                         <Link to="/open-wallet">Open Wallet</Link>
                     </div>
                     <div
+                        onClick={() => dinamicTitle('Create Wallet')}
                         style={this.menuUnderline('/create-wallet')}>
                         <Link to="/create-wallet">Create Wallet</Link>
                     </div>
-                    <div
-                        style={this.menuUnderline('/account-balance')}
-                    >
-                        <Link to="/account-balance">Account Balance</Link>
-                    </div>
-                    <div
-                        style={this.menuUnderline('/send-transaction')}
-                    >
-                        <Link to="/send-transaction">Send Transaction</Link>
-                    </div>
-                    <div style={{ cursor: 'pointer' }}>Log Out</div>
+                    {
+                        logged ?
+                            <React.Fragment>
+                                <div
+                                    onClick={() => dinamicTitle('Account Balance')}
+                                    style={this.menuUnderline('/account-balance')}
+                                >
+                                    <Link to="/account-balance">Account Balance</Link>
+                                </div>
+                                <div
+                                    onClick={() => dinamicTitle('Send Transaction')}
+                                    style={this.menuUnderline('/send-transaction')}
+                                >
+                                    <Link to="/send-transaction">Send Transaction</Link>
+                                </div>
+                                <div
+                                    onClick={this.logoutAndClearLocaStorage}
+                                    className="logout"
+                                    style={{ cursor: 'pointer' }}
+                                >Log Out</div>
+                            </React.Fragment>
+                            : null
+                    }
                 </nav>
             </header>
         );
     }
 }
+
+Header.contextType = LoggedContext;
 
 export default withRouter(props => (<Header {...props} />));
