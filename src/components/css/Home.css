@@ -1,0 +1,32 @@
+.welcome-text {
+    font-size: 2em;
+    color: var(--color-grandpa-blue);
+    font-weight: bold;
+}
+.welcome-text-container {
+    padding-top: 20px;
+    font-size: 1.3em;
+}
+.home-text {
+    padding-bottom: 20px;
+    color: var(--color-grandpa-yellow);
+}
+.home-option-text{
+    color: var(--color-grandpa-gray);
+}
+
+.home-input-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    font-size: 0.8em;
+}
+
+@media(max-width: 500px) {
+    .welcome-tex {
+        font-size: 1.3em
+    }
+    .welcome-text-container {
+        font-size: 0.9em
+    }
+}

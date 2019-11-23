@@ -55,17 +55,23 @@ class Header extends React.Component {
                         style={this.menuUnderline('/')}
                     >
                         <Link to="/">Home</Link></div>
-                    <div
-                        onClick={() => dinamicTitle('Open Wallet')}
-                        style={this.menuUnderline('/open-wallet')}
-                    >
-                        <Link to="/open-wallet">Open Wallet</Link>
-                    </div>
-                    <div
-                        onClick={() => dinamicTitle('Create Wallet')}
-                        style={this.menuUnderline('/create-wallet')}>
-                        <Link to="/create-wallet">Create Wallet</Link>
-                    </div>
+                    {
+                        !logged ?
+                            <React.Fragment>
+                                <div
+                                    onClick={() => dinamicTitle('Open Wallet')}
+                                    style={this.menuUnderline('/open-wallet')}
+                                >
+                                    <Link to="/open-wallet">Open Wallet</Link>
+                                </div>
+                                <div
+                                    onClick={() => dinamicTitle('Create Wallet')}
+                                    style={this.menuUnderline('/create-wallet')}>
+                                    <Link to="/create-wallet">Create Wallet</Link>
+                                </div>
+                            </React.Fragment>
+                            : null
+                    }
                     {
                         logged ?
                             <React.Fragment>

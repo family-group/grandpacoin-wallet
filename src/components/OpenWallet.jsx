@@ -90,6 +90,7 @@ class OpenWallet extends React.Component {
         wallet.encrypt(password)
             .then(encryptWallet => {
                 localStorage.setItem('json', encryptWallet);
+                localStorage.setItem('publicAccount', JSON.stringify({ address, publicKey }));
 
                 this.setState({
                     mnemonic: '',
