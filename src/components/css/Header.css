@@ -33,9 +33,28 @@
 .logout {
     color: white;
 }
-
+@media(max-width: 1000px) {
+    .header-menu {
+        width: 85%;
+        font-size: 1.2em;
+    }
+}
+@media(max-width: 650px) {
+    .header-menu {
+        font-size: 0.9em;
+    }
+}
 @media (max-width: 450px) {
     .header-logo {
         width: 80%;
+    }
+    .header-menu {
+        width: 90%;
+        font-size: 0.7em;
+    }
+}
+@media(max-width: 350px) {
+    .header-menu {
+        width: 97%;
     }
 }
