@@ -91,17 +91,13 @@ class OpenWallet extends React.Component {
         const { toggleLogged } = this.context;
         const wallet = new Wallet(mnemonic);
         const { history: { push } } = this.props;
-        const { account: { address, privateKey, publicKey } } = wallet;
+        const { account: { address, publicKey } } = wallet;
         wallet.encrypt(password)
             .then(encryptWallet => {
                 localStorage.setItem('json', encryptWallet);
                 localStorage.setItem('publicAccount', JSON.stringify({ address, publicKey }));
 
                 this.setState({
-                    mnemonic: '',
-                    address,
-                    privateKey,
-                    publicKey,
                     password: '',
                     disabled: false,
                     loading: false

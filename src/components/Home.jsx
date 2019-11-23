@@ -13,6 +13,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            mnemonic: '',
             address: '',
             publicKey: '',
             privateKey: '',
@@ -53,6 +54,7 @@ class Home extends React.Component {
             .then(decryptedWallet => {
                 const { privateKey } = decryptedWallet.account;
                 this.setState({
+                    mnemonic: decryptedWallet.mnemonic,
                     privateKey,
                     password: '',
                     confirmPassword: true,
@@ -81,6 +83,7 @@ class Home extends React.Component {
 
     render() {
         const {
+            mnemonic,
             address,
             publicKey,
             privateKey,
@@ -112,43 +115,40 @@ class Home extends React.Component {
                                         'Public Key': publicKey
                                     }}
                                 />
+                                <p className="margin-top">To see your private key and mnemonic, unlock them with your password!</p>
+                                <TextInput
+                                    name="password"
+                                    value={password}
+                                    className="margin-top"
+                                    type="password"
+                                    onChange={this.onChange}
+                                    placeholder="Password"
+                                />
+                                <Button
+                                    onClick={this.getPrivateKey}
+                                    className="margin-top"
+                                    disabled={disabled}
+                                    style={{ width: '140px' }}
+                                >UNLOCK</Button>
                                 {
-                                    confirmPassword ?
-                                        <React.Fragment>
-                                            <LogAreaOutput
-                                                value={!error ? {
-                                                    'Private Key': privateKey
-                                                } : { 'Error': error }}
-                                                className={error ? 'log-area-output-error' : ''}
-                                            />
-                                        </React.Fragment>
+                                    loading ? <Loader />
                                         : <React.Fragment>
                                             {
-                                                loading ?
-                                                    <Loader />
-                                                    : (
-                                                        <React.Fragment>
-                                                            <p className="margin-top">To see your private key, unlock it with your password!</p>
-                                                            <TextInput
-                                                                name="password"
-                                                                value={password}
-                                                                className="margin-top"
-                                                                type="password"
-                                                                onChange={this.onChange}
-                                                                placeholder="Password"
-                                                            />
-                                                            <Button
-                                                                onClick={this.getPrivateKey}
-                                                                className="margin-top"
-                                                                disabled={disabled}
-                                                                style={{ width: '160px' }}
-                                                            >UNLOCK PRIVATE KEY</Button>
-                                                        </React.Fragment>
-                                                    )
+                                                confirmPassword ?
+                                                    <React.Fragment>
+
+                                                        <LogAreaOutput
+                                                            value={!error ? {
+                                                                'Mnemonic': mnemonic,
+                                                                'Private Key': privateKey
+                                                            } : { 'Error': error }}
+                                                            className={error ? 'log-area-output-error' : ''}
+                                                        />
+                                                    </React.Fragment>
+                                                    : null
                                             }
                                         </React.Fragment>
                                 }
-
                             </div>
                             : null
                     }
@@ -161,3 +161,4 @@ class Home extends React.Component {
 Home.contextType = LoggedContext;
 
 export default Home;
+
