@@ -6,8 +6,9 @@ import LogAreaOutput from './LogAreaOutput';
 import utils from './../utils/functions';
 import Wallet from './../models/wallet';
 import { LoggedContext } from './../LoggedContext';
-import './css/CreateWallet.css';
+import { withRouter } from 'react-router-dom';
 import Loader from './Loader';
+import './css/CreateWallet.css';
 
 class CreateWallet extends React.Component {
     constructor(props) {
@@ -34,10 +35,11 @@ class CreateWallet extends React.Component {
     createWallet() {
         const { password } = this.state;
         const { toggleLogged } = this.context;
+        const { history: { push } } = this.props;
         const mnemonic = utils.generateMnemonic();
         const wallet = new Wallet(mnemonic);
 
-        const { address, privateKey, publicKey } = wallet.account;
+        const { address, publicKey } = wallet.account;
 
         this.setState({
             disabled: true,
@@ -46,17 +48,15 @@ class CreateWallet extends React.Component {
         wallet.encrypt(password)
             .then(encryptWallet => {
                 localStorage.setItem('json', encryptWallet);
+                localStorage.setItem('publicAccount', JSON.stringify({ address, publicKey }));
 
                 this.setState({
-                    mnemonic,
-                    address,
-                    privateKey,
-                    publicKey,
                     password: '',
                     disabled: false,
                     loading: false,
                 });
                 toggleLogged();
+                push('/');
             })
             .catch(error => {
                 console.log(error)
@@ -108,12 +108,7 @@ class CreateWallet extends React.Component {
                             loading ?
                                 <Loader />
                                 : <LogAreaOutput
-                                    value={!error ? {
-                                        'Mnemonic': mnemonic,
-                                        'Address': address,
-                                        'Public Key': publicKey,
-                                        'Private Key': privateKey
-                                    } : { 'Error': error }}
+                                    value={error ? { 'Error': error } : {}}
                                     className={error ? 'log-area-output-error' : ''}
                                 />
                         }
@@ -126,4 +121,4 @@ class CreateWallet extends React.Component {
 
 CreateWallet.contextType = LoggedContext;
 
-export default CreateWallet;
+export default withRouter(props => (<CreateWallet {...props} />));

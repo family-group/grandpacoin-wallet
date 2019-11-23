@@ -8,7 +8,8 @@ import { getWalletJSON } from './../utils/functions';
 import { validateMnemonic } from 'bip39';
 import Wallet from './../models/wallet';
 import Loader from './Loader';
-import './css/OpenWallet.css'
+import { withRouter } from 'react-router-dom';
+import './css/OpenWallet.css';
 
 class OpenWallet extends React.Component {
     constructor(props) {
@@ -55,12 +56,14 @@ class OpenWallet extends React.Component {
                 loading: false,
                 error: 'Invalid mnemonic'
             })
+            return;
         }
         this.openWalletWithMnemonic(mnemonic, password);
     }
 
     openWalletWithPassword(password) {
         const { encryptedWallet } = getWalletJSON();
+        const { history: { push } } = this.props;
         Wallet.fromEncryptedJSON(encryptedWallet, password)
             .then(decryptedWallet => {
                 const { address, privateKey, publicKey, } = decryptedWallet.account;
@@ -72,6 +75,7 @@ class OpenWallet extends React.Component {
                     disabled: false,
                     loading: false
                 });
+                push('/');
             })
             .catch(error => {
                 console.log(error);
@@ -86,6 +90,7 @@ class OpenWallet extends React.Component {
     openWalletWithMnemonic(mnemonic, password) {
         const { toggleLogged } = this.context;
         const wallet = new Wallet(mnemonic);
+        const { history: { push } } = this.props;
         const { account: { address, privateKey, publicKey } } = wallet;
         wallet.encrypt(password)
             .then(encryptWallet => {
@@ -101,7 +106,7 @@ class OpenWallet extends React.Component {
                     disabled: false,
                     loading: false
                 });
-
+                push('/');
                 toggleLogged();
             })
             .catch(error => {
@@ -179,4 +184,4 @@ class OpenWallet extends React.Component {
 
 OpenWallet.contextType = LoggedContext;
 
-export default OpenWallet;
+export default withRouter(props => (<OpenWallet {...props} />));

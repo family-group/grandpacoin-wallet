@@ -49,31 +49,15 @@ class Header extends React.Component {
                     <img src={GrandpaLogo} className="grandpa-logo-header" alt="grandpa-logo" />
                 </div>
                 <nav className="header-menu">
-                    {
-                        !logged ?
-                            <React.Fragment>
-                                <div
-                                    onClick={() => dinamicTitle('Open Wallet')}
-                                    style={this.menuUnderline('/open-wallet')}
-                                >
-                                    <Link to="/open-wallet">Open Wallet</Link>
-                                </div>
-                                <div
-                                    onClick={() => dinamicTitle('Create Wallet')}
-                                    style={this.menuUnderline('/create-wallet')}>
-                                    <Link to="/create-wallet">Create Wallet</Link>
-                                </div>
-                            </React.Fragment>
-                            : null
-                    }
+                    <div
+                        onClick={() => dinamicTitle('Home')}
+                        style={this.menuUnderline('/')}
+                    >
+                        <Link to="/">Home</Link></div>
                     {
                         logged ?
                             <React.Fragment>
-                                <div
-                                    onClick={() => dinamicTitle('Home')}
-                                    style={this.menuUnderline('/')}
-                                >
-                                    <Link to="/">Home</Link></div>
+
                                 <div
                                     onClick={() => dinamicTitle('Account Balance')}
                                     style={this.menuUnderline('/account-balance')}
@@ -94,11 +78,7 @@ class Header extends React.Component {
                             </React.Fragment>
                             :
                             <React.Fragment>
-                                <div
-                                    onClick={() => dinamicTitle('Home')}
-                                    style={this.menuUnderline('/')}
-                                >
-                                    <Link to="/">Home</Link></div>
+
                                 <div
                                     onClick={() => dinamicTitle('Open Wallet')}
                                     style={this.menuUnderline('/open-wallet')}

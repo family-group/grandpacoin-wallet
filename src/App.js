@@ -38,15 +38,14 @@ class App extends React.Component {
 
   render() {
     Xhr.baseUrl = 'http://localhost:5555';
+    const { logged } = this.state;
     return (
       <Router>
         <LoggedContext.Provider value={this.state}>
           <Header />
           <Switch>
             {
-              routes.map((route, index) => {
-                return <Route key={index} {...route} />
-              })
+              routes(logged).map((route, index) => (<Route key={index} {...route} />))
             }
           </Switch>
         </LoggedContext.Provider>
