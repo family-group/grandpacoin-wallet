@@ -91,19 +91,22 @@ class CreateWallet extends React.Component {
             <Layout>
                 <div className="create-wallet-container">
                     <h3 className="component-title">Create a New Wallet</h3>
-                    <p className="component-description">Generate a new wallet: random private key -> public key -> address</p>
+                    <p className="component-description">Hint: You can create a new wallet even without a password!</p>
                     <div className="create-wallet-input">
-                        <TextInput
-                            name="password"
-                            value={password}
-                            type="password"
-                            onChange={this.onChange}
-                            placeholder="Password"
-                        />
-                        <Button
-                            onClick={this.createWallet}
-                            disabled={disabled}
-                        >GENERATE NOW</Button>
+                        <div>
+                            <TextInput
+                                name="password"
+                                value={password}
+                                type="password"
+                                onChange={this.onChange}
+                                placeholder="Password"
+                            />
+                            <Button
+                                onClick={this.createWallet}
+                                disabled={disabled}
+                                className="margin-top"
+                            >GENERATE NOW</Button>
+                        </div>
                         {
                             loading ?
                                 <Loader />

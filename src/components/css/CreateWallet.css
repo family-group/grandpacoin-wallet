@@ -2,7 +2,11 @@
     width: 65%;
     font-size: 14px;
 }
-
 .create-wallet-input {
     width: 100%;
+}
+@media(max-width: 650px) {
+    .create-wallet-container {
+        width: 100%;
+    }
 }

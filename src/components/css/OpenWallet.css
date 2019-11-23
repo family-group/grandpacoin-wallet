@@ -1,9 +1,13 @@
 .open-wallet-container {
     width: 65%;
 }
-
 .open-wallet-input-section {
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+@media(max-width: 800px) {
+    .open-wallet-container{
+        width: 100%
+    }
 }

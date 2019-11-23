@@ -96,7 +96,7 @@ class Home extends React.Component {
 
         return (
             <Layout>
-                <p className="welcome-text">{logged ? 'THIS IS YOUR' : 'WELCOME TO'} GRANDPACOIN WALLET</p>
+                <p className="welcome-text">{logged ? 'WELCOME TO YOUR' : 'WELCOME TO'} GRANDPACOIN WALLET</p>
                 <div className="welcome-text-container">
                     {
                         !logged ?
