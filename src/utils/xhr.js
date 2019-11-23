@@ -8,6 +8,7 @@ class Xhr {
         this.result = this.result.bind(this);
         this.abort = this.abort.bind(this);
     }
+
     abort() {
         if (this.xhr.readyState < 4 && this.xhr.readyState > 0) {
             this.xhr.abort();
@@ -17,13 +18,18 @@ class Xhr {
         return new Promise((resolve, reject) => {
             this.xhr.onload = () => {
                 if (this.xhr.status >= 200 && this.xhr.status <= 300) {
-                    resolve(JSON.parse(this.xhr.response))
+                    resolve(JSON.parse(this.xhr.responseText))
                 } else {
-                    reject(JSON.parse(this.xhr.response))
+                    reject(JSON.parse(this.xhr.responseText))
                 }
             }
             this.xhr.onerror = () => {
-                reject(JSON.parse(this.xhr.response))
+                try {
+                    reject(JSON.parse(this.xhr.responseText))
+
+                } catch (err) {
+                    reject(this.xhr.responseText)
+                }
             }
         })
     }
