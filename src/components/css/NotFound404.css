@@ -1,0 +1,29 @@
+.not-found-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.3em;
+    font-weight: bold;
+    text-align: center;
+    min-height: 400px;
+}
+.not-found-wrapper-icon {
+    display: flex;
+    width: 30%;
+    max-width: 500px;
+    padding-bottom: 20px;
+}
+.not-found-wrapper-icon img {
+    display: block;
+    width: 100%;
+    object-fit: contain;
+}
+@media(max-width: 500px) {
+    .not-found-container{
+        font-size: 1.8em;
+    }
+    .not-found-wrapper-icon {
+        width: 50%;
+    }
+}
