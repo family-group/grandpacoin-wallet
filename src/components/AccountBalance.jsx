@@ -47,6 +47,10 @@ class AccountBalance extends React.Component {
         this.openWalletWithPassword = this.openWalletWithPassword.bind(this);
     }
     onChange({ target: { name, value } }) {
+        if (typeof value === 'string') {
+            const trimmedValue = value.trim();
+            this[name] = trimmedValue;
+        }
         this[name] = value;
     }
 

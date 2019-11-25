@@ -71,6 +71,12 @@ class CreateWallet extends React.Component {
 
     onChange(event) {
         const { name, value } = event.target;
+        if (typeof value === 'string') {
+            const trimmedValue = value.trim();
+            this.setState({
+                [name]: trimmedValue
+            })
+        }
         this.setState({
             [name]: value
         })

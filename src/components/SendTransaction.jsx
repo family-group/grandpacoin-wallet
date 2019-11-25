@@ -45,6 +45,11 @@ class SendTransaction extends React.Component {
     }
 
     onChange({ target: { name, value } }) {
+        if (typeof value === 'string') {
+            const trimmedValue = value.trim();
+            this[name] = trimmedValue;
+        }
+
         this[name] = value;
     }
 
@@ -169,7 +174,6 @@ class SendTransaction extends React.Component {
     }
 
     render() {
-        console.log(this.transactionHash)
         return (
             <Layout>
                 {
