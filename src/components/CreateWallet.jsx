@@ -78,10 +78,6 @@ class CreateWallet extends React.Component {
 
     render() {
         const {
-            mnemonic,
-            address,
-            privateKey,
-            publicKey,
             password,
             disabled,
             error,
