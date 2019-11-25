@@ -1,5 +1,5 @@
 import React from 'react';
-import GrandpaLogo from '../assets/logos/GRANDPACOIN_WALLET.svg';
+import GrandpaLogo from '../assets/logos/GRANDPACOIN_ICONO.svg';
 import { Link, withRouter } from 'react-router-dom';
 import { dinamicTitle } from './../utils/functions';
 import { LoggedContext } from './../LoggedContext';
@@ -46,7 +46,10 @@ class Header extends React.Component {
         return (
             <header className="grandpa-header">
                 <div className="header-logo">
-                    <img src={GrandpaLogo} className="grandpa-logo-header" alt="grandpa-logo" />
+                    <div className="grandpa-logo-header">
+                        <img src={GrandpaLogo} alt="grandpa-logo" />
+                    </div>
+                    <p>GrandpaCoin <span>Wallet</span></p>
                 </div>
                 <nav className="header-menu">
                     <div

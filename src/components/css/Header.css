@@ -9,9 +9,30 @@
 }
 .header-logo {
     display: flex;
-    width: 60%;
+    min-width: 220px;
     max-width: 500px;
+    justify-content: center;
 }
+
+.header-logo > p {
+    color: white;
+    font-family: 'Montserrat-Bold';
+    font-size: 2.5em;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.header-logo > p > span{
+    color: var(--color-grandpa-yellow);
+}
+
+.grandpa-logo-header {
+    display: flex;
+    width: 8%;
+    min-width: 25px;
+    flex-direction: row;
+}
+
 .header-logo img {
     display: block;
     width: 100%;
@@ -43,6 +64,9 @@
     .header-menu {
         font-size: 0.9em;
     }
+    .header-logo > p {
+        font-size: 1.5em;
+    }
 }
 @media (max-width: 450px) {
     .header-logo {
@@ -56,5 +80,9 @@
 @media(max-width: 350px) {
     .header-menu {
         width: 97%;
+    }
+
+    .header-logo > p {
+        font-size: 1.3em;
     }
 }

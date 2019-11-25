@@ -66,11 +66,7 @@ class OpenWallet extends React.Component {
         const { history: { push } } = this.props;
         Wallet.fromEncryptedJSON(encryptedWallet, password)
             .then(decryptedWallet => {
-                const { address, privateKey, publicKey, } = decryptedWallet.account;
                 this.setState({
-                    address,
-                    privateKey,
-                    publicKey,
                     password: '',
                     disabled: false,
                     loading: false
@@ -124,7 +120,7 @@ class OpenWallet extends React.Component {
     }
 
     render() {
-        const { mnemonic, password, publicKey, privateKey, address, disabled, error, loading } = this.state;
+        const { mnemonic, password, disabled, error, loading } = this.state;
         const { logged } = this.context;
         return (
             <Layout>
@@ -162,12 +158,7 @@ class OpenWallet extends React.Component {
                             loading ?
                                 <Loader />
                                 : <LogAreaOutput
-                                    value={!error ? {
-                                        'Address': address,
-                                        'Public Key': publicKey,
-                                        'Private Key': privateKey
-                                    } : { 'Error': error }
-                                    }
+                                    value={error ? { 'Error': error } : {}}
                                     className={error ? 'log-area-output-error' : ''}
                                 />
                         }
