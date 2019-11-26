@@ -237,7 +237,7 @@ class SendTransaction extends React.Component {
                                     <input
                                         name="sender"
                                         disable="true"
-                                        value={this.state.address}
+                                        defaultValue={this.state.address}
                                         className="full-width  margin-top text-input"
                                         placeholder="Sender"
                                     />
