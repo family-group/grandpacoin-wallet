@@ -3,11 +3,11 @@ import Xhr from '../utils/xhr';
 import { sha256 } from '../utils/hashes';
 
 class Transaction {
-    constructor({ from, to, value, data, senderPubKey, privKey }) {
+    constructor({ from, to, value, fee, data, senderPubKey, privKey }) {
         this.from = from.replace('0x', '');
         this.to = to.replace('0x', '');
         this.value = value;
-        this.fee = "10";
+        this.fee = fee;
         this.dateCreated = new Date().toISOString();
         this.data = data ? data.trim() : undefined;
         this.senderPubKey = senderPubKey.replace('0x', '');

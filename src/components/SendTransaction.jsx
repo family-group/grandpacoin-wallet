@@ -23,7 +23,8 @@ class SendTransaction extends React.Component {
         this.inputErrors = {
             addressInput: false,
             nodeInput: false,
-            valueError: false
+            valueError: false,
+            feeError: false
         };
         this.transactionHash = false;
         this.state = {
@@ -71,6 +72,16 @@ class SendTransaction extends React.Component {
                 addressInput: false,
                 nodeInput: false
             }
+            if (!this.fee || this.fee < 10) {
+                this.inputErrors = {
+                    feeError: "You'r fee must be higher than 10"
+                }
+
+                return this.setState({
+                    ...this.state,
+                    ...this.inputErrors
+                })
+            }
             if (!this.value) {
                 this.inputErrors = {
                     valueError: 'Invalid Value! Please try again.',
@@ -85,6 +96,7 @@ class SendTransaction extends React.Component {
                 from: this.state.address,
                 to: this.recipient,
                 value: this.value,
+                fee: this.fee,
                 senderPubKey: this.state.publicKey,
                 privKey: this.state.privateKey
             }
@@ -255,6 +267,16 @@ class SendTransaction extends React.Component {
                                         className="full-width  margin-top"
                                         onChange={this.onChange}
                                         placeholder="Value"
+                                    />
+                                    {
+                                        this.inputErrors.feeError ?
+                                            <p className="input-error">{this.inputErrors.feeError}</p> : null
+                                    }
+                                    <TextInput
+                                        name="fee"
+                                        className="full-width  margin-top"
+                                        onChange={this.onChange}
+                                        placeholder="fee"
                                     />
                                     <Button
                                         className="margin-top button"
