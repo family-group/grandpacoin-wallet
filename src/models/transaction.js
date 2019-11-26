@@ -59,11 +59,10 @@ class Transaction {
     verify() {
         return utils.verifySignature(this.transactionDataHash, this.senderPubKey, this.senderSignature);
     }
-    //0xa6ef9089840a55ae5934b49e681ca6a60a7ebaec
-    //0x607168b61015cfe766a3a6716180f9b60e909f35
-    async send(providerUrl) {
+
+    send(providerUrl) {
         const { from, to, value, data, fee, senderPubKey, senderSignature, dateCreated, transactionDataHash } = this;
-        try {
+        return new Promise(async (resolve, reject) => {
             const xhr = new Xhr('/transactions/send', {
                 useBaseUrl: providerUrl,
                 body: {
@@ -79,15 +78,19 @@ class Transaction {
                 },
                 method: 'POST'
             });
-
-            return {
-                promise: xhr.result(),
-                result: await xhr.result(),
-                abort: xhr.abort
+            try {
+                return resolve(
+                    {
+                        promise: xhr.result(),
+                        result: await xhr.result(),
+                        abort: xhr.abort
+                    }
+                )
+            } catch (error) {
+                return reject(error)
             }
-        } catch (err) {
-            console.log(err)
-        }
+
+        })
     }
 }
 

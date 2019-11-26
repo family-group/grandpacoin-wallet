@@ -4,6 +4,7 @@ import Layout from './Layout';
 import Button from './Button';
 import TextInput from './TextInput';
 import Wallet from './../models/wallet';
+import LogAreaOutput from './LogAreaOutput';
 import Transaction from '../models/transaction';
 import { getWalletJSON } from './../utils/functions';
 import { isValidUrl, isValidAddress } from '../utils/validator';
@@ -115,16 +116,35 @@ class SendTransaction extends React.Component {
             this.inputErrors = {
                 nodeInput: false
             }
+            if (!this.newTransaction) {
+                return this.setState({
+                    error: "Please, sign you'r transaction",
+                    ...this.inputErrors,
+                });
+            }
+
             this.newTransaction.send(this.nodeUrl)
                 .then(response => {
                     this.transactionHash = response.result.transactionDataHash;
 
                     this.setState({
+                        address: '',
+                        privateKey: '',
+                        publicKey: '',
+                        error: '',
+                        disabled: false,
+                        active: false,
+                        loading: false,
                         ...this.transactionHash,
                         ...this.inputErrors
                     })
                 })
-                .catch(err => console.log('err', err))
+                .catch(err => {
+                    this.setState({
+                        error: err.message,
+                        ...this.inputErrors,
+                    });
+                })
 
             this.setState({
                 ...this.state,
@@ -157,6 +177,7 @@ class SendTransaction extends React.Component {
                     privateKey,
                     publicKey,
                     password: '',
+                    error: '',
                     disabled: false,
                     loading: false,
                     active: true,
@@ -167,7 +188,7 @@ class SendTransaction extends React.Component {
                 this.setState({
                     error: 'Incorrect password!',
                     disabled: false,
-                    ...this.state,
+                    loading: false,
                     ...this.inputErrors,
                 });
             });
@@ -195,8 +216,14 @@ class SendTransaction extends React.Component {
                                     style={styles.button}
                                 >GET START</Button>
                             </div>
-                            {this.state.loading ?
-                                <Loader /> : null}
+                            {
+                                this.state.loading ?
+                                    <Loader /> : <LogAreaOutput
+                                        value={!this.state.error ? '' : { 'Error': this.state.error }
+                                        }
+                                        className={this.state.error ? 'log-area-output-error' : ''}
+                                    />
+                            }
                         </div>
                     ) : (
                             <div className="send-transaction-container">
@@ -259,7 +286,12 @@ class SendTransaction extends React.Component {
                                                 <p className="padding-bottom text-amount-send">You send {this.value} grandpas to address:</p>
                                                 <p className="padding-bottom">{this.recipient}</p>
                                                 <p className="tx-hash-text">Transaction Hash: 0x{this.transactionHash}</p>
-                                            </div> : null
+                                            </div> :
+                                            <LogAreaOutput
+                                                value={!this.state.error ? '' : { 'Error': this.state.error }
+                                                }
+                                                className={this.state.error ? 'log-area-output-error' : ''}
+                                            />
 
                                     }
                                 </div>
