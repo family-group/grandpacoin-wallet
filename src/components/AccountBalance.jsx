@@ -38,6 +38,7 @@ class AccountBalance extends React.Component {
             balanceStatus: false,
             disabled: false,
             active: false,
+            error: '',
             ...this.balancesRequest,
             ...this.inputErrors
         };
@@ -112,9 +113,10 @@ class AccountBalance extends React.Component {
             })
             .catch(error => {
                 this.setState({
-                    error: 'Incorrect password!',
                     disabled: false,
-                    ...this.state,
+                    error: 'Invalid password! Try again.',
+                    loading: false,
+                    ...this.balancesRequest,
                     ...this.inputErrors,
                 });
             });
@@ -141,8 +143,15 @@ class AccountBalance extends React.Component {
                                     style={styles.button}
                                 >GET BALANCE</Button>
                             </div>
-                            {this.state.loading ?
-                                <Loader /> : null}
+                            {
+                                this.state.loading ?
+                                    <Loader /> :
+                                    <LogAreaOutput
+                                        value={!this.state.error ? '' : { 'Error': this.state.error }
+                                        }
+                                        className={this.state.error ? 'log-area-output-error' : ''}
+                                    />
+                            }
                         </div>
                     ) : (
                             <div className="account-balance-container">
