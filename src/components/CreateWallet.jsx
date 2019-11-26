@@ -34,12 +34,12 @@ class CreateWallet extends React.Component {
 
     createWallet() {
         const { password } = this.state;
-        const { toggleLogged } = this.context;
+        const { toggleLogged, addInfoAccount } = this.context;
         const { history: { push } } = this.props;
         const mnemonic = utils.generateMnemonic();
         const wallet = new Wallet(mnemonic);
 
-        const { address, publicKey } = wallet.account;
+        const { address, privateKey, publicKey } = wallet.account;
 
         this.setState({
             disabled: true,
@@ -55,8 +55,9 @@ class CreateWallet extends React.Component {
                     disabled: false,
                     loading: false,
                 });
+                addInfoAccount(address, mnemonic, publicKey, privateKey);
                 toggleLogged();
-                push('/');
+                push('/new-wallet');
             })
             .catch(error => {
                 console.log(error)

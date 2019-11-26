@@ -5,6 +5,11 @@
 .create-wallet-input {
     width: 100%;
 }
+
+.red-font { 
+    color: red;
+}
+
 @media(max-width: 650px) {
     .create-wallet-container {
         width: 100%;
