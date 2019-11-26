@@ -9,6 +9,7 @@ import Transaction from '../models/transaction';
 import { getWalletJSON } from './../utils/functions';
 import { isValidUrl, isValidAddress } from '../utils/validator';
 
+import './css/TextInput.css';
 import './css/SendTransaction.css';
 
 const styles = {
@@ -140,13 +141,6 @@ class SendTransaction extends React.Component {
                     this.transactionHash = response.result.transactionDataHash;
 
                     this.setState({
-                        address: '',
-                        privateKey: '',
-                        publicKey: '',
-                        error: '',
-                        disabled: false,
-                        active: false,
-                        loading: false,
                         ...this.transactionHash,
                         ...this.inputErrors
                     })
@@ -157,7 +151,6 @@ class SendTransaction extends React.Component {
                         ...this.inputErrors,
                     });
                 })
-
             this.setState({
                 ...this.state,
                 ...this.inputErrors
@@ -241,11 +234,11 @@ class SendTransaction extends React.Component {
                             <div className="send-transaction-container">
                                 <h3 className="component-title">Send Transaction</h3>
                                 <div className="send-transaction-inputs">
-                                    <TextInput
+                                    <input
                                         name="sender"
-                                        disable
+                                        disable="true"
                                         value={this.state.address}
-                                        className="full-width  margin-top"
+                                        className="full-width  margin-top text-input"
                                         placeholder="Sender"
                                     />
                                     {

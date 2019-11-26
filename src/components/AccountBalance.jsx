@@ -1,4 +1,5 @@
 import React from 'react';
+import Loader from './Loader';
 import Layout from './Layout';
 import Button from './Button';
 import Xhr from '../utils/xhr';
@@ -34,6 +35,7 @@ class AccountBalance extends React.Component {
             balanceStatus: false,
             disabled: false,
             active: false,
+            loading: false,
             ...this.balancesRequest,
             ...this.inputErrors
         };
@@ -60,6 +62,12 @@ class AccountBalance extends React.Component {
                 addressInput: false,
                 nodeInput: false
             }
+
+            this.setState({
+                loading: true,
+                ...this.inputErrors
+            })
+
             this.address = this.address.replace('0x', '');
             this.balanceRequest = new Xhr(`/address/${this.address}/balance`, {
                 useBaseUrl: this.nodeUrl
@@ -71,6 +79,7 @@ class AccountBalance extends React.Component {
                         Pending: res.pendingBalance,
                     };
                     this.setState({
+                        loading: false,
                         balanceStatus: true,
                         ...this.balancesRequest,
                         ...this.inputErrors
@@ -78,7 +87,7 @@ class AccountBalance extends React.Component {
                 })
                 .catch(err => console.log('err', err));
 
-            this.setState({ ...this.inputErrors })
+
         }
     }
 
@@ -88,7 +97,7 @@ class AccountBalance extends React.Component {
                 <div className="account-balance-container">
                     <h3 className="component-title">View Account Balance</h3>
                     <div className="account-balance-inputs">
-                        <TextInput
+                        <input
                             className="balance-input"
                             placeholder="Insert your address"
                             name="address"
@@ -110,11 +119,15 @@ class AccountBalance extends React.Component {
                             onClick={this.onClick}
                             disabled={this.state.disabled}
                         >DISPLAY BALANCE</Button>
-                        <LogAreaOutput
-                            value={this.state.balanceStatus ? this.balancesRequest : ''}
-                            style={styles.logAreaOutput}
-                            className="margin-top"
-                        />
+                        {
+                            this.state.loading ?
+                                <Loader /> :
+                                <LogAreaOutput
+                                    value={this.state.balanceStatus ? this.balancesRequest : ''}
+                                    style={styles.logAreaOutput}
+                                    className="margin-top"
+                                />
+                        }
                     </div>
                 </div>
             </Layout>
