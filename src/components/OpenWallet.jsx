@@ -4,7 +4,6 @@ import Button from './Button';
 import TextInput from './TextInput';
 import LogAreaOutput from './LogAreaOutput';
 import { LoggedContext } from './../LoggedContext';
-import { getWalletJSON } from './../utils/functions';
 import { validateMnemonic } from 'bip39';
 import Wallet from './../models/wallet';
 import Loader from './Loader';
@@ -27,7 +26,6 @@ class OpenWallet extends React.Component {
 
         this.onChange = this.onChange.bind(this);
         this.openWallet = this.openWallet.bind(this);
-        this.openWalletWithPassword = this.openWalletWithPassword.bind(this);
         this.openWalletWithMnemonic = this.openWalletWithMnemonic.bind(this);
     }
 
@@ -38,17 +36,11 @@ class OpenWallet extends React.Component {
 
     openWallet() {
         const { mnemonic, password } = this.state;
-        const { logged } = this.context;
 
         this.setState({
             disabled: true,
             loading: true
         });
-
-        if (logged) {
-            this.openWalletWithPassword(password);
-            return;
-        }
 
         if (!validateMnemonic(mnemonic)) {
             this.setState({
@@ -59,28 +51,6 @@ class OpenWallet extends React.Component {
             return;
         }
         this.openWalletWithMnemonic(mnemonic, password);
-    }
-
-    openWalletWithPassword(password) {
-        const { encryptedWallet } = getWalletJSON();
-        const { history: { push } } = this.props;
-        Wallet.fromEncryptedJSON(encryptedWallet, password)
-            .then(decryptedWallet => {
-                this.setState({
-                    password: '',
-                    disabled: false,
-                    loading: false
-                });
-                push('/');
-            })
-            .catch(error => {
-                console.log(error);
-                this.setState({
-                    error: 'Incorrect password!',
-                    disabled: false,
-                    loading: false
-                });
-            });
     }
 
     openWalletWithMnemonic(mnemonic, password) {

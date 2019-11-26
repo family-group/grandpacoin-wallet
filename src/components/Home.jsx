@@ -1,13 +1,8 @@
 import React from 'react';
 import Layout from './Layout';
-import TextInput from './TextInput';
 import { LoggedContext } from './../LoggedContext'
 import LogAreaOutput from './LogAreaOutput';
-import { getWalletJSON } from './../utils/functions';
-import Wallet from './../models/wallet';
-import Button from './Button';
 import './css/Home.css';
-import Loader from './Loader';
 
 class Home extends React.Component {
     constructor(props) {
