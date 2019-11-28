@@ -52,7 +52,7 @@ export function generateEntropy(length = 16) {
 }
 
 export function encryptMnemonic(mnemonic, password = '') {
-    return ethers.Wallet.fromMnemonic(mnemonic, grandpa44.mainPath + '/0').encrypt(password);
+    return ethers.Wallet.fromMnemonic(mnemonic).encrypt(password);
 }
 
 export function decryptMnemonic(encryptJSON, password = '') {
@@ -71,10 +71,8 @@ export function loadAccounts(mnemonic, count = 1) {
 
 export function loadAccount(mnemonic) {
     const seed = mnemonicToSeedSync(mnemonic);
-    let account = {};
     const rootKey = fromSeed(seed);
-    account = Account(rootKey, 0);
-    return account.getData();
+    return Account(rootKey, 0).getData();
 }
 
 export function encryptAndSaveJSON(wallet, password) {
@@ -100,7 +98,6 @@ export function dinamicTitle(title) {
 
 export function getWalletJSON() {
     const encryptedWallet = localStorage.getItem('json');
-    if (encryptedWallet) return { encryptedWallet };
     return encryptedWallet;
 }
 

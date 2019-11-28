@@ -12,7 +12,7 @@ class Transaction {
         this.data = data ? data.trim() : undefined;
         this.senderPubKey = senderPubKey.replace('0x', '');
         this.privKey = privKey.replace('0x', '');
-        this.senderSignature = Transaction.sign(this);
+        this.senderSignature = [];
         this.transactionDataHash = Transaction.transactionHash(this)
     }
 

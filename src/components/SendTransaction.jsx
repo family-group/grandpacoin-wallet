@@ -133,10 +133,10 @@ class SendTransaction extends React.Component {
         }
 
         this.newTransaction = new Transaction(transactionInfo);
-        const transactionData = JSON.stringify(this.newTransaction.getTransactionData(), null, "  ")
+        this.newTransaction.senderSignature = Transaction.sign(this.newTransaction);
 
         this.setState({
-            transactionData,
+            transactionData: JSON.stringify(this.newTransaction, null, "  "),
             signed: true,
             addressInput: '',
             addressError: '',
@@ -186,10 +186,17 @@ class SendTransaction extends React.Component {
     }
 
     openWalletWithPassword(password) {
-        const { encryptedWallet } = getWalletJSON();
+        const encryptedWallet = getWalletJSON();
+
+        if (!encryptedWallet) {
+            this.setState({error: 'There is no wallet opened. Please, open your wallet.'})
+            return;
+        }
+
         Wallet.fromEncryptedJSON(encryptedWallet, password)
             .then(decryptedWallet => {
                 const { address, privateKey, publicKey, } = decryptedWallet.account;
+                console.log('decryptedWallet', decryptedWallet)
                 this.setState({
                     address,
                     privateKey,
@@ -326,18 +333,23 @@ class SendTransaction extends React.Component {
                                                         <p className="padding-bottom text-amount-send">You send {value} grandpas to address:</p>
                                                         <p className="padding-bottom">{recipient}</p>
                                                         <p className="tx-hash-text">Transaction Hash: 0x{transactionHash}</p>
-                                                    </div> :
-                                                    <LogAreaOutput
-                                                        value={!error ? '' : { 
-                                                            'Error': error,
-                                                            errorSendingTransaction
-                                                        }
-                                                        }
-                                                        className={!error ? '' : 'log-area-output-error'}
-                                                    />
+                                                    </div> 
+                                                    : null
 
                                             }
                                             </React.Fragment> 
+                                        : null
+                                    }
+                                    {
+                                        error ?
+                                            <LogAreaOutput
+                                                value={!error ? '' : { 
+                                                    'Error': error,
+                                                    errorSendingTransaction
+                                                }
+                                                }
+                                                className={!error ? '' : 'log-area-output-error'}
+                                            />
                                         : null
                                     }
                                 </div>
