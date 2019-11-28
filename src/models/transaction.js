@@ -3,11 +3,11 @@ import Xhr from '../utils/xhr';
 import { sha256 } from '../utils/hashes';
 
 class Transaction {
-    constructor({ from, to, value, data, senderPubKey, privKey }) {
+    constructor({ from, to, value, fee, data, senderPubKey, privKey }) {
         this.from = from.replace('0x', '');
         this.to = to.replace('0x', '');
         this.value = value;
-        this.fee = "10";
+        this.fee = fee;
         this.dateCreated = new Date().toISOString();
         this.data = data ? data.trim() : undefined;
         this.senderPubKey = senderPubKey.replace('0x', '');
@@ -59,11 +59,10 @@ class Transaction {
     verify() {
         return utils.verifySignature(this.transactionDataHash, this.senderPubKey, this.senderSignature);
     }
-    //0xa6ef9089840a55ae5934b49e681ca6a60a7ebaec
-    //0x607168b61015cfe766a3a6716180f9b60e909f35
-    async send(providerUrl) {
+
+    send(providerUrl) {
         const { from, to, value, data, fee, senderPubKey, senderSignature, dateCreated, transactionDataHash } = this;
-        try {
+        return new Promise(async (resolve, reject) => {
             const xhr = new Xhr('/transactions/send', {
                 useBaseUrl: providerUrl,
                 body: {
@@ -79,15 +78,19 @@ class Transaction {
                 },
                 method: 'POST'
             });
-
-            return {
-                promise: xhr.result(),
-                result: await xhr.result(),
-                abort: xhr.abort
+            try {
+                return resolve(
+                    {
+                        promise: xhr.result(),
+                        result: await xhr.result(),
+                        abort: xhr.abort
+                    }
+                )
+            } catch (error) {
+                return reject(error)
             }
-        } catch (err) {
-            console.log(err)
-        }
+
+        })
     }
 }
 

@@ -14,14 +14,30 @@ import { checkLocalStorageForWallet } from './utils/functions';
 class App extends React.Component {
   constructor(props) {
     super(props);
+
     this.toggleLogged = () => {
       this.setState(state => ({
         logged: checkLocalStorageForWallet()
       }))
     }
+
+    this.addInfoAccount = (address = '', mnemonic = '', publicKey = '', privateKey = '') => {
+      this.setState(state => ({
+        address,
+        mnemonic,
+        publicKey,
+        privateKey
+      }));
+    }
+
     this.state = {
       logged: checkLogged.logged,
-      toggleLogged: this.toggleLogged
+      toggleLogged: this.toggleLogged,
+      mnemonic: checkLogged.mnemonic,
+      publicKey: checkLogged.publicKey,
+      privateKey: checkLogged.privateKey,
+      address: checkLogged.address,
+      addInfoAccount: this.addInfoAccount
     }
 
     this.showLoggedLinks = this.showLoggedLinks.bind(this);

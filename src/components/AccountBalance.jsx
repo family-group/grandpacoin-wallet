@@ -4,10 +4,8 @@ import Layout from './Layout';
 import Button from './Button';
 import Xhr from '../utils/xhr';
 import TextInput from './TextInput';
-import Wallet from './../models/wallet';
 import LogAreaOutput from './LogAreaOutput';
 import { isValidUrl } from '../utils/validator';
-import { getWalletJSON } from './../utils/functions';
 
 import './css/AccountBalance.css';
 
@@ -34,17 +32,16 @@ class AccountBalance extends React.Component {
             pendingBalance: '',
         }
         this.state = {
-            address: '',
             balanceStatus: false,
             disabled: false,
             active: false,
+            loading: false,
             ...this.balancesRequest,
             ...this.inputErrors
         };
+        this.address = JSON.parse(localStorage['publicAccount']).address
         this.onChange = this.onChange.bind(this);
         this.onClick = this.onClick.bind(this);
-        this.openWallet = this.openWallet.bind(this);
-        this.openWalletWithPassword = this.openWalletWithPassword.bind(this);
     }
     onChange({ target: { name, value } }) {
         if (typeof value === 'string') {
@@ -65,7 +62,13 @@ class AccountBalance extends React.Component {
                 addressInput: false,
                 nodeInput: false
             }
-            this.address = this.state.address.replace('0x', '');
+
+            this.setState({
+                loading: true,
+                ...this.inputErrors
+            })
+
+            this.address = this.address.replace('0x', '');
             this.balanceRequest = new Xhr(`/address/${this.address}/balance`, {
                 useBaseUrl: this.nodeUrl
             }).result()
@@ -76,6 +79,7 @@ class AccountBalance extends React.Component {
                         Pending: res.pendingBalance,
                     };
                     this.setState({
+                        loading: false,
                         balanceStatus: true,
                         ...this.balancesRequest,
                         ...this.inputErrors
@@ -83,106 +87,51 @@ class AccountBalance extends React.Component {
                 })
                 .catch(err => console.log('err', err));
 
-            this.setState({ ...this.inputErrors })
+
         }
     }
 
-    openWallet() {
-        if (!this.password) {
-            this.password = ''
-        }
-        this.setState({
-            disabled: true,
-            loading: true,
-            ...this.inputErrors,
-        });
-
-        this.openWalletWithPassword(this.password);
-
-    }
-
-    openWalletWithPassword(password) {
-        const { encryptedWallet } = getWalletJSON();
-        Wallet.fromEncryptedJSON(encryptedWallet, password)
-            .then(decryptedWallet => {
-                const { address } = decryptedWallet.account;
-                this.setState({
-                    address,
-                    disabled: false,
-                    loading: false,
-                    active: true,
-                    ...this.inputErrors,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    error: 'Incorrect password!',
-                    disabled: false,
-                    ...this.state,
-                    ...this.inputErrors,
-                });
-            });
-    }
     render() {
         return (
             <Layout>
-                {
-                    !this.state.active ? (
-                        <div className="send-transaction-container">
-                            <p className="send-transacction-text">PLEASE ENTER YOUR WALLET PASSWORD TO SEE YOUR BALANCE</p>
-                            <div className="open-wallet-input-section">
-                                <TextInput
-                                    name="password"
+                <div className="account-balance-container">
+                    <h3 className="component-title">View Account Balance</h3>
+                    <p>Balances are shown in Grandsons</p>
+                    <p>1 Grandpa = 1000 Grandsons = 1000000 Grandsons</p>
+                    <div className="account-balance-inputs">
+                        <input
+                            className="balance-input"
+                            placeholder="Insert your address"
+                            name="address"
+                            value={this.address}
+                            disabled
+                        />
+                        {
+                            this.inputErrors.nodeInput ?
+                                <p className="error-text">{this.inputErrors.nodeInput}</p> : null
+                        }
+                        <TextInput
+                            className="balance-input margin-top"
+                            placeholder='Insert your node url'
+                            name="nodeUrl"
+                            onChange={this.onChange}
+                        />
+                        <Button
+                            style={styles.button}
+                            onClick={this.onClick}
+                            disabled={this.state.disabled}
+                        >DISPLAY BALANCE</Button>
+                        {
+                            this.state.loading ?
+                                <Loader /> :
+                                <LogAreaOutput
+                                    value={this.state.balanceStatus ? this.balancesRequest : ''}
+                                    style={styles.logAreaOutput}
                                     className="margin-top"
-                                    type="password"
-                                    onChange={this.onChange}
-                                    placeholder="Password"
                                 />
-                                <Button
-                                    onClick={this.openWallet}
-                                    className="margin-top"
-                                    disabled={this.state.disabled}
-                                    style={styles.button}
-                                >GET BALANCE</Button>
-                            </div>
-                            {this.state.loading ?
-                                <Loader /> : null}
-                        </div>
-                    ) : (
-                            <div className="account-balance-container">
-                                <h3 className="component-title">View Account Balance</h3>
-                                <div className="account-balance-inputs">
-                                    <TextInput
-                                        className="balance-input"
-                                        placeholder="Insert your address"
-                                        name="address"
-                                        value={this.state.address}
-                                        disabled
-                                    />
-                                    {
-                                        this.inputErrors.nodeInput ?
-                                            <p className="error-text">{this.inputErrors.nodeInput}</p> : null
-                                    }
-                                    <TextInput
-                                        className="balance-input margin-top"
-                                        placeholder='Insert your node url'
-                                        name="nodeUrl"
-                                        onChange={this.onChange}
-                                    />
-                                    <Button
-                                        style={styles.button}
-                                        onClick={this.onClick}
-                                        disabled={this.state.disabled}
-                                    >DISPLAY BALANCE</Button>
-                                    <LogAreaOutput
-                                        value={this.state.balanceStatus ? this.balancesRequest : ''}
-                                        style={styles.logAreaOutput}
-                                        className="margin-top"
-                                    />
-                                </div>
-                            </div>
-                        )
-                }
+                        }
+                    </div>
+                </div>
             </Layout>
         );
     }

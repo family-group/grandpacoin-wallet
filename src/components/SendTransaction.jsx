@@ -4,10 +4,12 @@ import Layout from './Layout';
 import Button from './Button';
 import TextInput from './TextInput';
 import Wallet from './../models/wallet';
+import LogAreaOutput from './LogAreaOutput';
 import Transaction from '../models/transaction';
 import { getWalletJSON } from './../utils/functions';
-import { isValidUrl, isValidAddress } from '../utils/validator';
+import { isValidUrl, isValidAddress, isValidNumber } from '../utils/validator';
 
+import './css/TextInput.css';
 import './css/SendTransaction.css';
 
 const styles = {
@@ -19,131 +21,167 @@ const styles = {
 class SendTransaction extends React.Component {
     constructor() {
         super();
-        this.inputErrors = {
-            addressInput: false,
-            nodeInput: false,
-            valueError: false
-        };
-        this.transactionHash = false;
         this.state = {
             address: '',
             privateKey: '',
             publicKey: '',
-            error: '',
             disabled: false,
             active: false,
             loading: false,
-            ...this.inputErrors,
-            ...this.transactionHash
+            signed: false,
+            password: '',
+            sender: '',
+            recipient: '',
+            value: '',
+            fee: '',
+            data: '',
+            nodeUrl: '',
+            transactionData: '',
+            transactionHash: '',
+            addressError: '',
+            addressInput: '',
+            error: '',
+            errorSendingTransaction: {},
+            nodeInput: '',
+            valueError: '',
+            feeError: '',
         }
         this.newTransaction = null;
         this.onChange = this.onChange.bind(this);
         this.onSendTransaction = this.onSendTransaction.bind(this);
-        this.getDataTransaction = this.getDataTransaction.bind(this);
+        this.signTransaction = this.signTransaction.bind(this);
         this.openWallet = this.openWallet.bind(this);
         this.openWalletWithPassword = this.openWalletWithPassword.bind(this);
     }
 
     onChange({ target: { name, value } }) {
-        if (typeof value === 'string') {
-            const trimmedValue = value.trim();
-            this[name] = trimmedValue;
+        if(name === 'recipient'
+        || name === 'value'
+        || name === 'fee'
+        || name === 'data') {
+            this.setState({
+                signed: false,
+                error: '',
+                transactionHash: ''
+            })
         }
 
-        this[name] = value;
+        if (typeof value === 'string') {
+            const trimmedValue = value.trim();
+            this.setState({
+                [name]: trimmedValue,
+            });
+        }
+
+        this.setState({
+            [name]: value,
+        });
     }
 
 
-    getDataTransaction() {
-        if (!isValidAddress(this.recipient)) {
-            this.inputErrors = {
-                addressInput: 'Invalid Address! Please try again.',
-            }
-
+    signTransaction() {
+        const {address, recipient, fee, value, data, publicKey, privateKey } = this.state;
+        if (!isValidAddress(recipient)) {
             this.setState({
-                ...this.state,
-                ...this.inputErrors
+                addressInput: 'Invalid Address! Please, try again.',
+                addressError: '',
+                error: '',
+                valueError: '',
+                feeError: '',
             })
-
-        } else {
-            this.inputErrors = {
-                addressInput: false,
-                nodeInput: false
-            }
-            if (!this.value) {
-                this.inputErrors = {
-                    valueError: 'Invalid Value! Please try again.',
-                }
-                return this.setState({
-                    ...this.state,
-                    ...this.inputErrors
-                })
-            }
-
-            let data = {
-                from: this.state.address,
-                to: this.recipient,
-                value: this.value,
-                senderPubKey: this.state.publicKey,
-                privKey: this.state.privateKey
-            }
-
-
-            this.newTransaction = new Transaction(data);
-            let transactionData = JSON.stringify(this.newTransaction.getTransactionData(), null, "  ")
-
-
-            this.setState({
-                transactionData,
-                ...this.inputErrors
-            })
-
+            return;
         }
+
+        if (!isValidNumber(value)) {
+            this.setState({
+                valueError: 'Value must be a number.',
+                addressError: '',
+                error: '',
+                feeError: '',
+            });
+            return;
+        }
+
+        if (!fee || fee < 10 || !isValidNumber(fee)) {
+            this.setState({
+                feeError: 'Your fee must be higher than 10.',
+                addressError: '',
+                error: '',
+                valueError: '',
+            });
+            return;
+        }
+
+        if (address === recipient) {
+            this.setState({
+                addressError: 'You can not sent money to your own account.',
+                error: '',
+                valueError: '',
+                feeError: '',
+            });
+            return;
+        }
+
+        let transactionInfo = {
+            from: address,
+            to: recipient,
+            value: value ? value : '0',
+            fee,
+            data,
+            senderPubKey: publicKey,
+            privKey: privateKey
+        }
+
+        this.newTransaction = new Transaction(transactionInfo);
+        const transactionData = JSON.stringify(this.newTransaction.getTransactionData(), null, "  ")
+
+        this.setState({
+            transactionData,
+            signed: true,
+            addressInput: '',
+            addressError: '',
+            error: '',
+            valueError: '',
+            feeError: '',
+        })
     }
 
     onSendTransaction() {
-        if (!isValidUrl(this.nodeUrl)) {
-            this.inputErrors = {
+        const { nodeUrl } = this.state;
+
+        if (!isValidUrl(nodeUrl)) {
+            this.setState({
                 nodeInput: 'Invalid Url! Please try again.'
-            }
-
-            this.setState({
-                ...this.state,
-                ...this.inputErrors
-            })
-        } else {
-            this.inputErrors = {
-                nodeInput: false
-            }
-            this.newTransaction.send(this.nodeUrl)
-                .then(response => {
-                    this.transactionHash = response.result.transactionDataHash;
-
-                    this.setState({
-                        ...this.transactionHash,
-                        ...this.inputErrors
-                    })
-                })
-                .catch(err => console.log('err', err))
-
-            this.setState({
-                ...this.state,
-                ...this.inputErrors
-            })
+            });
+            return;
         }
+
+        this.newTransaction.send(nodeUrl)
+            .then(response => {
+                this.setState({
+                    transactionHash: response.result.transactionDataHash
+                })
+            })
+            .catch(err => {
+                console.log('Response error: ', err)
+                this.setState({
+                    error: err.message,
+                    nodeInput: '',
+                    transactionHash: '',
+                    ...Object.assign({}, err.errors ? {errorSendingTransaction: err.errors} : {})
+                });
+            })
     }
 
     openWallet() {
-        if (!this.password) {
-            this.password = ''
-        }
+        const { password } = this.state;
+
         this.setState({
             disabled: true,
             loading: true,
-            ...this.inputErrors,
         });
 
-        this.openWalletWithPassword(this.password);
+        this.openWalletWithPassword(password);
 
     }
 
@@ -157,27 +195,27 @@ class SendTransaction extends React.Component {
                     privateKey,
                     publicKey,
                     password: '',
+                    error: '',
                     disabled: false,
                     loading: false,
                     active: true,
-                    ...this.inputErrors,
                 });
             })
             .catch(error => {
                 this.setState({
                     error: 'Incorrect password!',
                     disabled: false,
-                    ...this.state,
-                    ...this.inputErrors,
+                    loading: false,
                 });
             });
     }
 
     render() {
+        const { address, recipient, value, data, active, disabled, transactionHash, transactionData, loading, signed, error, errorSendingTransaction, nodeInput, valueError, feeError, addressInput, addressError } = this.state;
         return (
             <Layout>
                 {
-                    !this.state.active ? (
+                    !active ? (
                         <div className="send-transaction-container">
                             <p className="send-transacction-text">PLEASE ENTER YOUR WALLET PASSWORD TO COMPLETE THE TRANSACTION</p>
                             <div className="open-wallet-input-section">
@@ -191,27 +229,36 @@ class SendTransaction extends React.Component {
                                 <Button
                                     onClick={this.openWallet}
                                     className="margin-top"
-                                    disabled={this.state.disabled}
+                                    disabled={disabled}
                                     style={styles.button}
                                 >GET START</Button>
                             </div>
-                            {this.state.loading ?
-                                <Loader /> : null}
+                            {
+                                loading ?
+                                    <Loader /> : <LogAreaOutput
+                                        value={error ? { 'Error': error } : ''}
+                                        className={error ? 'log-area-output-error' : ''}
+                                    />
+                            }
                         </div>
                     ) : (
                             <div className="send-transaction-container">
                                 <h3 className="component-title">Send Transaction</h3>
                                 <div className="send-transaction-inputs">
-                                    <TextInput
+                                    <input
                                         name="sender"
-                                        disable
-                                        value={this.state.address}
-                                        className="full-width  margin-top"
+                                        disabled
+                                        defaultValue={address}
+                                        className="full-width  margin-top text-input"
                                         placeholder="Sender"
                                     />
                                     {
-                                        this.inputErrors.addressInput ?
-                                            <p className="input-error">{this.inputErrors.addressInput}</p> : null
+                                        addressInput ?
+                                            <p className="input-error">{addressInput}</p> : null
+                                    }
+                                    {
+                                        addressError ?
+                                            <p className="input-error">{addressError}</p> : null
                                     }
                                     <TextInput
                                         name="recipient"
@@ -220,8 +267,8 @@ class SendTransaction extends React.Component {
                                         placeholder="Recipient"
                                     />
                                     {
-                                        this.inputErrors.valueError ?
-                                            <p className="input-error">{this.inputErrors.valueError}</p> : null
+                                        valueError ?
+                                            <p className="input-error">{valueError}</p> : null
                                     }
                                     <TextInput
                                         name="value"
@@ -229,38 +276,69 @@ class SendTransaction extends React.Component {
                                         onChange={this.onChange}
                                         placeholder="Value"
                                     />
-                                    <Button
-                                        className="margin-top button"
-                                        disabled={this.state.disabled}
-                                        onClick={this.getDataTransaction}
-                                        style={styles.button}
-                                    >SIGN TRANSACTION</Button>
-                                    <textarea className="transaction-data" disabled value={this.state.transactionData ? this.state.transactionData : ''} />
                                     {
-                                        this.inputErrors.nodeInput ?
-                                            <p className="input-error">{this.inputErrors.nodeInput}</p> : null
+                                        feeError ?
+                                            <p className="input-error">{feeError}</p> : null
                                     }
                                     <TextInput
-                                        name="nodeUrl"
+                                        name="fee"
                                         className="full-width  margin-top"
                                         onChange={this.onChange}
-                                        placeholder="Blockchain Node"
+                                        placeholder="Fee"
+                                    />
+                                    <TextInput
+                                        name="data"
+                                        className="full-width  margin-top"
+                                        onChange={this.onChange}
+                                        placeholder="Message (optional)"
                                     />
                                     <Button
-                                        className="margin-top"
-                                        disabled={this.state.disabled}
-                                        onClick={this.onSendTransaction}
+                                        className="margin-top button"
+                                        disabled={disabled}
+                                        onClick={this.signTransaction}
                                         style={styles.button}
-                                    >SEND TRANSACTION</Button>
-                                    {
-                                        this.transactionHash ?
-                                            <div className="transaccion-result">
-                                                <p className="padding-bottom transaction-tittle-text">TRANSACTION SUCCESSFUL!</p>
-                                                <p className="padding-bottom text-amount-send">You send {this.value} grandpas to address:</p>
-                                                <p className="padding-bottom">{this.recipient}</p>
-                                                <p className="tx-hash-text">Transaction Hash: 0x{this.transactionHash}</p>
-                                            </div> : null
+                                    >SIGN TRANSACTION</Button>
 
+                                    {
+                                        signed ? 
+                                            <React.Fragment>
+                                                <textarea className="transaction-data" disabled value={transactionData} />
+                                            {
+                                                nodeInput ?
+                                                    <p className="input-error">{nodeInput}</p> : null
+                                            }
+                                            <TextInput
+                                                name="nodeUrl"
+                                                className="full-width  margin-top"
+                                                onChange={this.onChange}
+                                                placeholder="Blockchain Node"
+                                            />
+                                            <Button
+                                                className="margin-top"
+                                                disabled={disabled}
+                                                onClick={this.onSendTransaction}
+                                                style={styles.button}
+                                            >SEND TRANSACTION</Button>
+                                            {
+                                                transactionHash ?
+                                                    <div className="transaccion-result">
+                                                        <p className="padding-bottom transaction-tittle-text">TRANSACTION SUCCESSFUL!</p>
+                                                        <p className="padding-bottom text-amount-send">You send {value} grandpas to address:</p>
+                                                        <p className="padding-bottom">{recipient}</p>
+                                                        <p className="tx-hash-text">Transaction Hash: 0x{transactionHash}</p>
+                                                    </div> :
+                                                    <LogAreaOutput
+                                                        value={!error ? '' : { 
+                                                            'Error': error,
+                                                            errorSendingTransaction
+                                                        }
+                                                        }
+                                                        className={!error ? '' : 'log-area-output-error'}
+                                                    />
+
+                                            }
+                                            </React.Fragment> 
+                                        : null
                                     }
                                 </div>
                             </div>

@@ -4,6 +4,7 @@ import AccountBalance from './components/AccountBalance';
 import SendTransaction from './components/SendTransaction';
 import NotFound404 from './components/NotFound404';
 import OpenWallet from './components/OpenWallet';
+import NewWallet from './components/NewWallet';
 
 export default function routes(logged) {
     if (logged) {
@@ -11,6 +12,11 @@ export default function routes(logged) {
             {
                 path: '/',
                 component: Home,
+                exact: true,
+            },
+            {
+                path: '/new-wallet',
+                component: NewWallet,
                 exact: true,
             },
             {
