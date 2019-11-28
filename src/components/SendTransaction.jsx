@@ -196,7 +196,6 @@ class SendTransaction extends React.Component {
         Wallet.fromEncryptedJSON(encryptedWallet, password)
             .then(decryptedWallet => {
                 const { address, privateKey, publicKey, } = decryptedWallet.account;
-                console.log('decryptedWallet', decryptedWallet)
                 this.setState({
                     address,
                     privateKey,
