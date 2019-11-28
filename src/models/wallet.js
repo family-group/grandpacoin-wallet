@@ -1,7 +1,7 @@
 import { validateMnemonic } from 'bip39';
 import {
-    loadAccounts, generateMnemonic,
-    decryptMnemonic, encryptMnemonic, loadAccount
+    generateMnemonic, decryptMnemonic, 
+    encryptMnemonic, loadAccount
 } from '../utils/functions';
 
 
@@ -25,16 +25,11 @@ function Wallet(mnemonic) {
 
     class SingleWallet {
         constructor() {
-            this.accounts = loadAccounts(_mnemonic, 1);
             this.account = loadAccount(mnemonic);
         }
 
         get mnemonic() {
             return _mnemonic;
-        }
-
-        getAccounts() {
-            return this.accounts.map(account => account.getData());
         }
 
         encrypt(password) {
