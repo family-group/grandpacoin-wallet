@@ -18,6 +18,11 @@ export function isValidUrl(url) {
     return false;
 }
 
+export function isValidNumber(number) {
+    if(/^[0-9]*$/gm.test(number)) return true;
+    return false;
+}
+
 export function getInputErrors(address, url) {
 
     if (!isValidAddress(address) && !isValidUrl(url)) {
