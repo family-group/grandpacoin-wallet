@@ -96,6 +96,8 @@ class AccountBalance extends React.Component {
             <Layout>
                 <div className="account-balance-container">
                     <h3 className="component-title">View Account Balance</h3>
+                    <p>Balances are shown in Grandsons</p>
+                    <p>1 Grandpa = 1000 Grandsons = 1000000 Grandsons</p>
                     <div className="account-balance-inputs">
                         <input
                             className="balance-input"
