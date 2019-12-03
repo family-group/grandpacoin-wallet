@@ -4,7 +4,6 @@ import { ethers } from 'ethers';
 import { fromSeed } from 'bip32';
 import { mnemonicToSeedSync } from 'bip39';
 import Account from '../models/account';
-import grandpa44 from '../utils/bip44-params';
 const secp256k1 = new elliptic.ec('secp256k1');
 
 export function toHexString(value) {

@@ -217,7 +217,7 @@ class SendTransaction extends React.Component {
     }
 
     render() {
-        const { address, recipient, value, data, active, disabled, transactionHash, transactionData, loading, signed, error, errorSendingTransaction, nodeInput, valueError, feeError, addressInput, addressError } = this.state;
+        const { address, recipient, value, active, disabled, transactionHash, transactionData, loading, signed, error, errorSendingTransaction, nodeInput, valueError, feeError, addressInput, addressError } = this.state;
         return (
             <Layout>
                 {
